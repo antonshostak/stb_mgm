@@ -3,7 +3,7 @@
  */
 var config = {
     STB_Model:[
-        {STB:"ALL STBs",Value:"0"},
+        {STB:"ALL STBs",Value:""},
         {STB:"All Altech",Value:"DTR-9401"},
         {STB:"All ADB",Value:"NET-2721TW,NET-3720TWX"},
         {STB:"ADB model NET-2721",Value:"NET-2721TW"},
