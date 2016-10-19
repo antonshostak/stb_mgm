@@ -11,24 +11,24 @@ function getUPDATE_SW(){
         '<div class="form-group col-sm-6">' +
         '   <label class="control-label col-sm-3" for="STB_Model">STB_Model:</label>' +
         '     <div class="col-sm-9">'+
-        '        <select type="text" class="form-control" id="STB_Model" placeholder="Choose Model">' + opt +'</select>'+
+        '        <select type="text" class="form-control" id="STB_Model">' + opt +'</select>'+
         '    </div>' +
         '</div>' +
         '<div class="form-group col-sm-6">' +
         '    <label class="control-label col-sm-3" for="STB_Version">STB_Version:</label>' +
         '    <div class="col-sm-9">' +
-        '        <input type="text" class="form-control" id="STB_Version" placeholder="StbVersionNumberFilter">' +
+        '        <input type="text" class="form-control" id="STB_Version" placeholder="Stb Version Number">' +
         '    </div>' +
         '</div>' +
         '<div class="form-group col-sm-6">' +
         '    <div class="checkbox">' +
-        '        <label><input id="DEV_Filter" type="checkbox">DEV Filter</label>' +
+        '        <label><input id="DEV_Filter" type="checkbox" checked>DEV Filter</label>' +
         '    </div>' +
         '</div>' +
         '<div class="form-group col-sm-6">' +
         '   <label class="control-label col-sm-3" for="Download_URL">Download URL:</label>' +
         '     <div class="col-sm-9">'+
-        '        <select type="text" class="form-control" disabled="disabled" id="Download_URL">' + opt +'</select>'+
+        '        <select type="text" class="form-control" disabled id="UPDATE_SW_Download_URL"></select>'+
         '    </div>' +
         '</div>' +
         '<div class="form-group col-sm-6">' +
@@ -37,27 +37,28 @@ function getUPDATE_SW(){
         '    </div>' +
         '</div>' +
         '<div class="form-group col-sm-6">' +
-        '   <label class="control-label col-sm-3" for="Restart">Restart:</label>' +
+        '   <label class="control-label col-sm-3" for="UPDATE_SW_Restart">Restart:</label>' +
         '     <div class="col-sm-9">'+
-        '        <select type="text" class="form-control" id="Restart"> <option value="Immediate">Immediate</option>' +
+        '        <select type="text" class="form-control" id="UPDATE_SW_Restart"><option value="0">Select</option>' +
+        ' <option value="Immediate">Immediate</option>' +
         '       <option value="WindowBased">WindowBased</option> </select>'+
         '    </div>' +
         '</div>' +
         '<div class="form-group col-sm-6">' +
-        '    <label class="control-label col-sm-3" for="Balance">Balance:</label>' +
+        '    <label class="control-label col-sm-3" for="UPDATE_SW_Balance">Balance:</label>' +
         '    <div class="col-sm-9">' +
-        '        <input type="text" class="form-control" id="Balance" placeholder="Enter Balance" value="3600000">' +
+        '        <input type="number" class="form-control" id="UPDATE_SW_Balance" placeholder="Enter Balance" value="3600000">' +
         '    </div>' +
         '</div>' +
         '    <div class="form-group col-sm-12">' +
         '        <div class="col-sm-offset-1 col-sm-5">' +
-        '<button type="submit" id="UPDATE_SW_save" class="btn btn-default">Save Configuration</button>' +
-        '       <button type="submit" id="UPDATE_SW_load" class="btn btn-default">Load Configuration</button>' +
+        '<button id="UPDATE_SW_save" class="btn btn-default">Save Configuration</button>' +
+        '       <button  id="UPDATE_SW_load" class="btn btn-default">Load Configuration</button>' +
         '    </div> ' +
-        '        <div class="col-sm-offset-1 col-sm-5">' +
+        '    <div class="col-sm-offset-1 col-sm-5">' +
         '        <input type="file" id="UPDATE_SW_List" accept="csv/*" class="btn btn-default hidden"/>' +
-        '<button type="submit" id="UPDATE_SW_click" class="btn btn-default">Send to List</button>' +
-        '       <button type="submit" class="btn btn-default">Send to All</button>' +
+        '       <button type="submit" id="UPDATE_SW_click" class="btn btn-default">Send to List</button>' +
+        '       <span id="UPDATE_SW_Load" class="glyphicon glyphicon-refresh glyphicon-spin"></span><button type="submit" id="UPDATE_SW_all" class="btn btn-default">Send to All</button>' +
         '    </div> ' +
         '</form>'
 }
@@ -67,7 +68,7 @@ function getVOD_REFRESH(){
         '<div class="form-group col-sm-6">' +
         '    <label class="control-label col-sm-3" for="VOD_REFRESH_Balance">Balance:</label>' +
         '    <div class="col-sm-9">' +
-        '        <input type="text" class="form-control" id="VOD_REFRESH_Balance" placeholder="Enter Balance" value="3600000">' +
+        '        <input type="number" class="form-control" id="VOD_REFRESH_Balance" placeholder="Enter Balance" value="3600000">' +
         '    </div>' +
         '</div>' +
         '        <div class="col-sm-offset-1 col-sm-5">' +
@@ -83,7 +84,7 @@ function getDTT_SCAN(){
         '<div class="form-group col-sm-6">' +
         '    <label class="control-label col-sm-3" for="DTT_SCAN_Balance">Balance:</label>' +
         '    <div class="col-sm-9">' +
-        '        <input type="text" class="form-control" id="DTT_SCAN_Balance" placeholder="Enter Balance" value="3600000">' +
+        '        <input type="number" class="form-control" id="DTT_SCAN_Balance" placeholder="Enter Balance" value="3600000">' +
         '    </div>' +
         '</div>' +
         '        <div class="col-sm-offset-1 col-sm-5">' +
@@ -120,13 +121,13 @@ function getREMOTE_LOG(){
         '<div class="form-group col-sm-6">' +
         '   <label class="control-label col-sm-3" for="REMOTE_LOG_Port">Port:</label>' +
         '     <div class="col-sm-9">'+
-        '        <input type="text" class="form-control" id="REMOTE_LOG_Port" placeholder="Port">'+
+        '        <input type="number" class="form-control" id="REMOTE_LOG_Port" placeholder="Port">'+
         '    </div>' +
         '</div>'+
         '<div class="form-group col-sm-6">' +
         '    <label class="control-label col-sm-3" for="REMOTE_LOG_Balance">Balance:</label>' +
         '    <div class="col-sm-9">' +
-        '        <input type="text" class="form-control" id="REMOTE_LOG_Balance" placeholder="Enter Balance" value="3600000">' +
+        '        <input type="number" class="form-control" id="REMOTE_LOG_Balance" placeholder="Enter Balance" value="3600000">' +
         '    </div>' +
         '</div>' +
         '    <div class="form-group col-sm-12">' +
@@ -137,7 +138,7 @@ function getREMOTE_LOG(){
         '        <div class="col-sm-offset-1 col-sm-5">' +
         '        <input type="file" id="REMOTE_LOG_List" accept="csv/*" class="btn btn-default hidden"/>' +
         '<button type="submit" id="REMOTE_LOG_click" class="btn btn-default">Send to List</button>' +
-        '       <button type="submit" class="btn btn-default">Send to All</button>' +
+        '       <button id="REMOTE_LOG_all" type="submit" class="btn btn-default">Send to All</button>' +
         '    </div> ' +
         '</form>'
 
