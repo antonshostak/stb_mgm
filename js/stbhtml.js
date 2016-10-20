@@ -74,7 +74,7 @@ function getVOD_REFRESH(){
         '        <div class="col-sm-offset-1 col-sm-5">' +
         '        <input type="file" id="VOD_REFRESH_List" accept="csv/*" class="btn btn-default hidden"/>' +
         '<button type="submit" id="VOD_REFRESH_click" class="btn btn-default">Send to List</button>' +
-        '       <button type="submit" class="btn btn-default">Send to All</button>' +
+        '       <span id="VOD_REFRESH_Load" class="glyphicon glyphicon-refresh glyphicon-spin"></span><button id="VOD_REFRESH_all" type="submit" class="btn btn-default">Send to All</button>' +
         '    </div> ' +
         '</form>'
 }
@@ -90,7 +90,7 @@ function getDTT_SCAN(){
         '        <div class="col-sm-offset-1 col-sm-5">' +
         '        <input type="file" id="DTT_SCAN_List" accept="csv/*" class="btn btn-default hidden"/>' +
         '<button type="submit" id="DTT_SCAN_click" class="btn btn-default">Send to List</button>' +
-        '       <button type="submit" class="btn btn-default">Send to All</button>' +
+        '        <span id="DTT_SCAN_Load" class="glyphicon glyphicon-refresh glyphicon-spin"></span><button type="submit" id="DTT_SCAN_All" class="btn btn-default">Send to All</button>' +
         '    </div> ' +
         '</form>'
 }
@@ -102,7 +102,7 @@ function getREMOTE_LOG(){
     return '<h2>REMOTE_LOG</h2>' +
         '<form class="form-horizontal" id="REMOTE_LOG">' +
         '<div class="form-group col-sm-6">' +
-        '   <label class="control-label col-sm-3" for="STB_Model">STB_Model:</label>' +
+        '   <label class="control-label col-sm-3" for="REMOTE_LOG_STB_Model">STB_Model:</label>' +
         '     <div class="col-sm-9">'+
         '        <select type="text" class="form-control" id="REMOTE_LOG_STB_Model">' + opt +'</select>'+
         '    </div>' +
@@ -138,7 +138,7 @@ function getREMOTE_LOG(){
         '        <div class="col-sm-offset-1 col-sm-5">' +
         '        <input type="file" id="REMOTE_LOG_List" accept="csv/*" class="btn btn-default hidden"/>' +
         '<button type="submit" id="REMOTE_LOG_click" class="btn btn-default">Send to List</button>' +
-        '       <button id="REMOTE_LOG_all" type="submit" class="btn btn-default">Send to All</button>' +
+        '        <span id="REMOTE_LOG_Load" class="glyphicon glyphicon-refresh glyphicon-spin"></span><button id="REMOTE_LOG_all" type="submit" class="btn btn-default">Send to All</button>' +
         '    </div> ' +
         '</form>'
 
