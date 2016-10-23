@@ -133,7 +133,15 @@ footer {
     color: #f5f5f5;
     padding: 32px;
 }
-
+.active div.alert{
+    display: none;
+}
+.active.error div.alert-danger{
+    display: block;
+}
+.active.success div.alert-success{
+    display: block;
+}
 footer a {
     color: #f5f5f5;
 }

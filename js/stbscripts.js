@@ -99,6 +99,12 @@ function sendRequest(data,callback,failcallback){
                 });
             }
         })
+        $('#UPDATE_SW_save').on('click',function(){
+            saveConfiguration('UPDATE_SW',getUPDATE_SW_Data());
+        });
+        $('#UPDATE_SW_load').on('click',function(){
+            loadConfiguration('UPDATE_SW');
+        })
     };
     $.fn.initVOD_REFRESH = function(){
         $('#VOD_REFRESH').html(getVOD_REFRESH());
@@ -165,8 +171,63 @@ function sendRequest(data,callback,failcallback){
                 });
             }
         });
-
+        $('#REMOTE_LOG_save').on('click',function(){
+            saveConfiguration('REMOTE_LOG',getREMOTE_LOG_Data());
+        });
+        $('#REMOTE_LOG_load').on('click',function(){
+            loadConfiguration('REMOTE_LOG');
+        })
     };
+    function saveConfiguration(form,data){
+        var existsconfigs = JSON.parse(localStorage.getItem(form));
+        if (!existsconfigs){
+            existsconfigs = {};
+        }
+        $('#errorModal').modal('show');
+        $('#errorModalBody').html('<div class="active"><input id="confName" class="form-control" placeholder="Enter name for configuration"/><div class="alert alert-danger fade in">' +
+            '        <strong>Warning!</strong>Configuration with this name already exists. </div><div class="alert alert-success fade in">' +
+            '        <strong>Well Done!</strong>Configuration saved successfully. </div></div>');
+        $('#confName').keyup(function(event){
+            $(this).parent().removeClass('error');
+            $(this).parent().removeClass('success');
+            var name = $('#confName').val();
+            if (event.keyCode === 13 && name.length > 0){
+                if(existsconfigs[name]){
+                    $(this).parent().addClass('error');
+                    $(this).val('');
+                }else{
+                    existsconfigs[name] = data;
+                    localStorage.setItem(form,JSON.stringify(existsconfigs));
+                    $(this).parent().addClass('success');
+                    setTimeout(function(){$('#errorModal').modal('hide');},3000);
+                }
+            }
+
+        });
+    }
+    function loadConfiguration(form){
+        function fillList(list){
+            var html = '';
+            for(var el in list) {
+                html += '<div class="confList form-control" data-id="'+el+'">'+el+'</div>'
+            }
+            return html;
+        }
+        var existsconfigs = JSON.parse(localStorage.getItem(form));
+        if (!existsconfigs){
+            existsconfigs = {};
+        }
+        $('#errorModal').modal('show');
+        $('#errorModalBody').html(fillList(existsconfigs));
+        $('.confList').on('click',function(event){
+            event.preventDefault();
+            
+            alert($(this).data('id'));
+        })
+    }
+    function hasConfiguration(data,array){
+        
+    }
     function getUPDATE_SW_Data(){
         var StbModelFilter  = $('#STB_Model option:selected').val();
         var StbVersionNumberFilter = $('#STB_Version').val();
