@@ -1,6 +1,9 @@
 /**
  * Created by User1 on 16/10/2016.
  */
+$(window).on('activate.bs.scrollspy', function (e) {
+    history.replaceState({}, "", $("a[href^='#']", e.target).attr("href"));
+});
 $(document).ready(function(){
     // Initialize Tooltip
     $('[data-toggle="tooltip"]').tooltip();
