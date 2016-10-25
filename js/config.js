@@ -15,5 +15,5 @@ var config = {
         {Name:"DTT_SCAN"},
         {Name:"REMOTE_LOG"}
     ],
-    url:"/siapp-dispatcher-ws/inbox/postJob"
+    url:"http://212.29.244.206:80/siapp-dispatcher-ws/job/postJob"
 };

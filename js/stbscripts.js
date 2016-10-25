@@ -64,7 +64,7 @@ function sendRequest(data,callback,failcallback){
                 $('#UPDATE_SW_List').click();
             }
         });
-        $('#UPDATE_SW_List').on('change', uploadUpdate_SW, false);
+        $('#UPDATE_SW_List').change(uploadUpdate_SW);
         $('#STB_Model').change(function(){
             $('#UPDATE_SW_Download_URL').html('');
             $('#UPDATE_SW_Download_URL').prop('disabled', 'disabled');
@@ -112,7 +112,7 @@ function sendRequest(data,callback,failcallback){
             document.getElementById('VOD_REFRESH_List').value = null;
             $('#VOD_REFRESH_List').click();
         });
-        $('#VOD_REFRESH_List').on('change', uploadVodRefresh, false);
+        $('#VOD_REFRESH_List').change(uploadVodRefresh);
 
         $('#VOD_REFRESH_all').on('click',function(event){
             event.preventDefault();
@@ -133,7 +133,7 @@ function sendRequest(data,callback,failcallback){
             document.getElementById('DTT_SCAN_List').value = null;
             $('#DTT_SCAN_List').click();
         });
-        $('#DTT_SCAN_List').on('change', uploadDttScan, false);
+        $('#DTT_SCAN_List').change(uploadDttScan);
 
         $('#DTT_SCAN_All').on('click',function(event){
             event.preventDefault();
@@ -209,7 +209,7 @@ function sendRequest(data,callback,failcallback){
         function fillList(list){
             var html = '';
             for(var el in list) {
-                html += '<div class="confList form-control" data-id="'+el+'">'+el+'</div>'
+                html += '<div class="confList form-control alert" data-id="'+el+'"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>'+el+'</div>'
             }
             return html;
         }
@@ -221,13 +221,74 @@ function sendRequest(data,callback,failcallback){
         $('#errorModalBody').html(fillList(existsconfigs));
         $('.confList').on('click',function(event){
             event.preventDefault();
-            
-            alert($(this).data('id'));
+            if (event.target.className == "close"){
+                delete existsconfigs[$(this).data('id')];
+                localStorage.setItem(form,JSON.stringify(existsconfigs));
+            }else{
+                var data = existsconfigs[$(this).data('id')].messageContent;
+                switch(form){
+                    case "UPDATE_SW":
+                        if (data.StbModelFilter){
+                            $('#STB_Model').val(data.StbModelFilter).change();
+                        }else{
+                            $('#STB_Model').val("0").change();
+                        }
+                        if(data.StbVersionNumberFilter){
+                            $('#STB_Version').val(data.StbVersionNumberFilter);
+                        }
+                        if(data.DevFilter){
+                            $('#DEV_Filter').prop('checked',true);
+                        }else{
+                            $('#DEV_Filter').prop('checked',false);
+                        }
+                        if(data.DownloadFlag){
+                            $('#Download_Flag').prop('checked',true);
+                        }else{
+                            $('#Download_Flag').prop('checked',false);
+                        }
+                        if(data.DownloadUrl){
+                            $('#UPDATE_SW_Download_URL').val(data.DownloadUrl).change();
+                        }else{
+                            $('#UPDATE_SW_Download_URL').val("0").change();
+                        }
+                        if(data.Restart){
+                            $('#UPDATE_SW_Restart').val(data.Restart).change();
+                        }else{
+                            $('#UPDATE_SW_Restart').val("0").change();
+                        }
+                        $('#UPDATE_SW_Balance').val(data.balance);
+                        $('#errorModal').modal('hide');
+                        break;
+                    case "REMOTE_LOG":
+                        if(data.StbModelFilter){
+                            $('#REMOTE_LOG_STB_Model').val(data.StbModelFilter).change();
+                        }else{
+                            $('#REMOTE_LOG_STB_Model').val("0").change();
+                        }
+                        if(data.HostUrl){
+                            $('#REMOTE_LOG_HOST_URL').val(data.HostUrl);
+                        }else{
+                            $('#REMOTE_LOG_HOST_URL').val('');
+                        }
+                        if(data.Port){
+                            $('#REMOTE_LOG_Port').val(data.Port);
+                        }else{
+                            $('#REMOTE_LOG_Port').val('');
+                        }
+                        if(data.Enabled){
+                            $('#REMOTE_LOG_Enable').prop('checked',true);
+                        }else{
+                            $('#REMOTE_LOG_Enable').prop('checked',false);
+                        }
+                        $('#REMOTE_LOG_Balance').val(data.balance);
+                        $('#errorModal').modal('hide');
+                        break;
+                }
+            }
+
         })
     }
-    function hasConfiguration(data,array){
-        
-    }
+
     function getUPDATE_SW_Data(){
         var StbModelFilter  = $('#STB_Model option:selected').val();
         var StbVersionNumberFilter = $('#STB_Version').val();
@@ -237,45 +298,41 @@ function sendRequest(data,callback,failcallback){
         var Restart = $('#UPDATE_SW_Restart option:selected').val();
         var balance = $('#UPDATE_SW_Balance').val();
         var data = {
-            "dlFlag": false,
-            "prFlag": false,
             "sentTime": new Date().getTime(),
-            "id": 4,
             "appId": "tasks",
-            "data": {
+            "sendAll":true,
+            "messageContent": {
                 "command": "UPDATE_SW",
                 "balance":balance
             }
         };
         if (StbModelFilter && StbModelFilter!=="0"){
-            data.data.StbModelFilter = StbModelFilter;
+            data.messageContent.StbModelFilter = StbModelFilter;
         }
         if (StbVersionNumberFilter && StbVersionNumberFilter.trim() !== ""){
-            data.data.StbVersionNumberFilter = StbVersionNumberFilter;
+            data.messageContent.StbVersionNumberFilter = StbVersionNumberFilter;
         }
         if (DevFilter){
-            data.data.DevFilter = DevFilter;
+            data.messageContent.DevFilter = DevFilter;
         }
         if (DownloadFlag){
-            data.data.DownloadFlag = DownloadFlag;
+            data.messageContent.DownloadFlag = DownloadFlag;
         }
         if (DownloadUrl !== undefined && DownloadUrl !=="0"){
-            data.data.DownloadUrl = DownloadUrl;
+            data.messageContent.DownloadUrl = DownloadUrl;
         }
         if (Restart !== "0"){
-            data.data.Restart = Restart;
+            data.messageContent.Restart = Restart;
         }
         return data;
     }
     function getVOD_REFRESH_Data(){
         var balance = $('#VOD_REFRESH_Balance').val();
         var data = {
-            "dlFlag": false,
-            "prFlag": false,
             "sentTime": new Date().getTime(),
-            "id": 4,
+            "sendAll":true,
             "appId": "tasks",
-            "data": {
+            "messageContent": {
                 "command": "VOD_REFRESH",
                 "balance":balance
             }
@@ -285,12 +342,10 @@ function sendRequest(data,callback,failcallback){
     function getDTT_SCAN_Data(){
         var balance = $('#DTT_SCAN_Balance').val();
         var data = {
-            "dlFlag": false,
-            "prFlag": false,
             "sentTime": new Date().getTime(),
-            "id": 4,
+            "sendAll":true,
             "appId": "tasks",
-            "data": {
+            "messageContent": {
                 "command": "DTT_SCAN",
                 "balance":balance
             }
@@ -301,30 +356,28 @@ function sendRequest(data,callback,failcallback){
         var StbModelFilter  = $('#REMOTE_LOG_STB_Model option:selected').val();
         var HostUrl = $('#REMOTE_LOG_HOST_URL').val();
         var Port = $('#REMOTE_LOG_Port').val();
-        var Enabled = $('#DEV_Filter').prop('checked');
-        var balance = $('#DTT_SCAN_Balance').val();
+        var Enabled = $('#REMOTE_LOG_Enable').prop('checked');
+        var balance = $('#REMOTE_LOG_Balance').val();
         var data = {
-            "dlFlag": false,
-            "prFlag": false,
             "sentTime": new Date().getTime(),
-            "id": 4,
             "appId": "tasks",
-            "data": {
+            "sendAll":true,
+            "messageContent": {
                 "command": "REMOTE_LOG",
                 "balance":balance
             }
         };
         if (StbModelFilter && StbModelFilter!=="0"){
-            data.data.StbModelFilter = StbModelFilter;
+            data.messageContent.StbModelFilter = StbModelFilter;
         }
         if (HostUrl && HostUrl.trim() !== ""){
-            data.data.HostUrl = HostUrl;
+            data.messageContent.HostUrl = HostUrl;
         }
         if (Port && Port.trim() !== ""){
-            data.data.Port = Port;
+            data.messageContent.Port = Port;
         }
         if(Enabled){
-            data.data.Enabled = Enabled;
+            data.messageContent.Enabled = Enabled;
         }
         return data;
     }
@@ -346,22 +399,22 @@ function sendRequest(data,callback,failcallback){
 
     function uploadUpdate_SW(evt){
         var data = getUPDATE_SW_Data();
-        data.SendAll = false;
+        data.sendAll = false;
         upload(evt,data);
     }
     function uploadVodRefresh(evt){
         var data = getVOD_REFRESH_Data();
-        data.SendAll = false;
+        data.sendAll = false;
         upload(evt,data);
     }
     function uploadDttScan(evt){
         var data = getDTT_SCAN_Data();
-        data.SendAll = false;
+        data.sendAll = false;
         upload(evt,data);
     }
     function uploadRemoteLog(evt){
         var data = getREMOTE_LOG_Data();
-        data.SendAll = false;
+        data.sendAll = false;
         upload(evt,data);
     }
     function formatData(data) {
