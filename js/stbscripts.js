@@ -45,13 +45,15 @@ function browserSupportFileUpload() {
 }
 function sendRequest(data,callback,failcallback){
     console.log(JSON.stringify(data));
+    data.messageContent = JSON.stringify(data.messageContent);
+    var data_str = JSON.stringify(data);
     $.ajax({
         type: 'POST',
         url: config.url,
-        data : data,
-        contentType: 'application/json',
-        success:function() {
-            callback();
+        data : data_str,
+        contentType: 'application/x-www-form-urlencoded',
+        success:function(res) {
+            callback(JSON.stringify(res));
         },
         error:function(res){
             failcallback(res);
@@ -94,11 +96,17 @@ function sendRequest(data,callback,failcallback){
                 var data = getUPDATE_SW_Data();
                 $('#UPDATE_SW_all').hide();
                 $('#UPDATE_SW_Load').show();
-                sendRequest(data,function(){$('#UPDATE_SW_all').show();$('#UPDATE_SW_Load').hide();},function(res){
+                sendRequest(data,
+                    function(res){
                     $('#UPDATE_SW_all').show();
                     $('#UPDATE_SW_Load').hide();
                     $('#errorModal').modal('show');
-                    $('#errorModalBody').html(res.responseText)
+                    $('#errorModalBody').html(res)},
+                    function(res){
+                    $('#UPDATE_SW_all').show();
+                    $('#UPDATE_SW_Load').hide();
+                    $('#errorModal').modal('show');
+                    $('#errorModalBody').html(res)
                 });
             }
         })
@@ -122,11 +130,17 @@ function sendRequest(data,callback,failcallback){
             var data = getVOD_REFRESH_Data();
                 $('#VOD_REFRESH_all').hide();
                 $('#VOD_REFRESH_Load').show();
-                sendRequest(data,function(){$('#VOD_REFRESH_all').show();$('#VOD_REFRESH_Load').hide();},function(res){
-                    $('#VOD_REFRESH_all').show();
-                    $('#VOD_REFRESH_Load').hide();
-                    $('#errorModal').modal('show');
-                    $('#errorModalBody').html(res.responseText)
+                sendRequest(data,
+                    function(res){
+                        $('#VOD_REFRESH_all').show();
+                        $('#VOD_REFRESH_Load').hide();
+                        $('#errorModal').modal('show');
+                        $('#errorModalBody').html(res)
+                    },function(res){
+                        $('#VOD_REFRESH_all').show();
+                        $('#VOD_REFRESH_Load').hide();
+                        $('#errorModal').modal('show');
+                        $('#errorModalBody').html(res)
                 });
         })
     };
@@ -143,7 +157,10 @@ function sendRequest(data,callback,failcallback){
             var data = getDTT_SCAN_Data();
             $('#DTT_SCAN_All').hide();
             $('#DTT_SCAN_Load').show();
-            sendRequest(data,function(){$('#DTT_SCAN_All').show();$('#DTT_SCAN_Load').hide();},function(res){
+            sendRequest(data,function(res){
+                $('#errorModal').modal('show');
+                $('#errorModalBody').html(res)
+                $('#DTT_SCAN_All').show();$('#DTT_SCAN_Load').hide();},function(res){
                 $('#DTT_SCAN_all').show();
                 $('#DTT_SCAN_Load').hide();
                 $('#errorModal').modal('show');
@@ -166,7 +183,9 @@ function sendRequest(data,callback,failcallback){
                 var data = getREMOTE_LOG_Data();
                 $('#REMOTE_LOG_all').hide();
                 $('#REMOTE_LOG_Load').show();
-                sendRequest(data,function(){$('#REMOTE_LOG_all').show();$('#REMOTE_LOG_Load').hide();},function(res){
+                sendRequest(data,function(res){$('#errorModal').modal('show');
+                    $('#errorModalBody').html(res);
+                    $('#REMOTE_LOG_all').show();$('#REMOTE_LOG_Load').hide();},function(res){
                     $('#REMOTE_LOG_all').show();
                     $('#REMOTE_LOG_Load').hide();
                     $('#errorModal').modal('show');
@@ -187,9 +206,10 @@ function sendRequest(data,callback,failcallback){
             existsconfigs = {};
         }
         $('#errorModal').modal('show');
-        $('#errorModalBody').html('<div class="active"><input id="confName" class="form-control" placeholder="Enter name for configuration"/><div class="alert alert-danger fade in">' +
+        $('#errorModalBody').html('<div class="active"><input id="confName" class="form-control" placeholder="Enter name for configuration" autofocus/><div class="alert alert-danger fade in">' +
             '        <strong>Warning!</strong>Configuration with this name already exists. </div><div class="alert alert-success fade in">' +
             '        <strong>Well Done!</strong>Configuration saved successfully. </div></div>');
+        $('input#confName').focus();
         $('#confName').keyup(function(event){
             $(this).parent().removeClass('error');
             $(this).parent().removeClass('success');
@@ -477,10 +497,10 @@ function sendRequest(data,callback,failcallback){
                             event.preventDefault();
                             $('#sendForm').hide();
                             $('#sendForm_Load').show();
-                            sendRequest(fieldsData,function (){
+                            sendRequest(fieldsData,function (res){
                                 $('#sendForm').show();
                                 $('#sendForm_Load').hide();
-                                $('#modalBody').html('Data sent');
+                                $('#modalBody').html(res);
                                 setTimeout(function(){$('#listModal').modal('hide'); $('#modalBody').html('');},2000);
                             },function(res){
                                 $('#modalBody').html('Error:'+res.responseText);
