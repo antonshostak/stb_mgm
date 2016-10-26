@@ -51,13 +51,15 @@ function sendRequest(data,callback,failcallback){
         type: 'POST',
         url: config.url,
         data : data_str,
-        contentType: 'application/x-www-form-urlencoded',
-        success:function(res) {
-            callback(JSON.stringify(res));
-        },
-        error:function(res){
-            failcallback(res);
+        contentType: 'application/x-www-form-urlencoded'
+    }).done(function(res) {
+        if(res.success) {
+            callback("Success: JobId="+res.job.jobId);
+        }else{
+            callback("Job post Fail:"+res.respDescription);
         }
+    }).fail(function(res){
+        failcallback("Job post Fail:"+res.responseJSON.respDescription);
     });
 }
 (function ( $ ) {
